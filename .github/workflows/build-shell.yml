@@ -1,0 +1,33 @@
+name: Run Shell Script # Name of the GitHub Actions workflow
+
+# Define the events that trigger the workflow
+on:
+  # Trigger the workflow on push events and pull request events for changes in .sh files
+  push:
+    paths:
+      - "**.sh"
+  pull_request:
+    paths:
+      - "**.sh"
+  # Allow manual triggering of the workflow
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner
+
+    env:
+      SCRIPT_NAME: git-lfs-setup.sh # Define the script name in an environment variable
+
+    steps:
+      # Step 1: Checkout repository to make the script file available
+      - name: Checkout repository
+        uses: actions/checkout@v4 # Fetch the repository content, including .sh files
+
+      # Step 2: Install the required dependencies
+      - name: Install dependencies
+        run: sudo apt-get install bash sudo -y # Install the bash shell
+
+      # Step 3: Run the shell script using the environment variable
+      - name: Run the shell script
+        run: sudo bash ${{ env.SCRIPT_NAME }} # Execute the script stored in the SCRIPT_NAME env variable
