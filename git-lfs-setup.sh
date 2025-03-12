@@ -39,9 +39,8 @@ function system_information() {
     CURRENT_DISTRO=${ID}
     # Set the CURRENT_DISTRO_VERSION variable to the system's version ID (e.g., '20.04' for Ubuntu 20.04)
     CURRENT_DISTRO_VERSION=${VERSION_ID}
-    # Extract the major version of the system by splitting the version string at the dot (.) and keeping the first field
-    # For example, for '20.04', it will set CURRENT_DISTRO_MAJOR_VERSION to '20'
-    CURRENT_DISTRO_MAJOR_VERSION=$(echo "${CURRENT_DISTRO_VERSION}" | cut --delimiter="." --fields=1)
+    # Get the codename of the current distribution (e.g., 'focal' for Ubuntu 20.04)
+    CURRENT_DISTRO_CODENAME=${VERSION_CODENAME}
   fi
 }
 
@@ -109,24 +108,47 @@ check_disk_space
 
 # Define a function to install Git LFS on the system
 function install-git-lfs() {
-  # Add the debian archive keyring
-  apt-get install debian-archive-keyring -y
-  # Install the apt transport https package
-  apt-get install apt-transport-https -y
-  # Set the path for the APT Keyring Directory
-  APT_KEYRING_DIR="/etc/apt/keyrings"
-  if [ ! -d ${APT_KEYRING_DIR} ]; then
-    install -d -m 0755 ${APT_KEYRING_DIR}
+  if { [ "${CURRENT_DISTRO}" == "ubuntu" ] || [ "${CURRENT_DISTRO}" == "debian" ] || [ "${CURRENT_DISTRO}" == "raspbian" ] || [ "${CURRENT_DISTRO}" == "pop" ] || [ "${CURRENT_DISTRO}" == "kali" ] || [ "${CURRENT_DISTRO}" == "linuxmint" ] || [ "${CURRENT_DISTRO}" == "neon" ]; }; then
+    # Add the debian archive keyring, and install the apt-transport-https package
+    apt-get install debian-archive-keyring apt-transport-https -y
+    # Set the path for the APT Keyring Directory
+    APT_KEYRING_DIR="/etc/apt/keyrings"
+    if [ ! -d ${APT_KEYRING_DIR} ]; then
+      install -d -m 0755 ${APT_KEYRING_DIR}
+    fi
+    # Set the Git LFS GPG Key URL and the path to store the keyring
+    GIT_LFS_GPG_KEY="https://packagecloud.io/github/git-lfs/gpgkey"
+    # Set the path to store the Git LFS GPG Key
+    GIT_LFS_GPG_KEY_PATH="${APT_KEYRING_DIR}/git-lfs-archive-keyring.gpg"
+    # Download the Git LFS GPG Key and store it in the specified path
+    curl -fsSL ${GIT_LFS_GPG_KEY} | gpg --dearmor -o ${GIT_LFS_GPG_KEY_PATH}
+    # Set the permissions for the Git LFS GPG Key
+    chmod 0644 ${GIT_LFS_GPG_KEY_PATH}
+    # Path to the Git LFS APT repository configuration file
+    GIT_LFS_APT_REPO_FILE="/etc/apt/sources.list.d/github_git-lfs.list"
+    # Add the Git LFS APT repository to the system's sources list
+    echo "deb [signed-by=${GIT_LFS_GPG_KEY_PATH}] https://packagecloud.io/github/git-lfs/${CURRENT_DISTRO}/ ${CURRENT_DISTRO_CODENAME} main" >${GIT_LFS_APT_REPO_FILE}
+    echo "deb-src [signed-by=${GIT_LFS_GPG_KEY_PATH}] https://packagecloud.io/github/git-lfs/${CURRENT_DISTRO}/ ${CURRENT_DISTRO_CODENAME} main" >>${GIT_LFS_APT_REPO_FILE}
+    # Update the package lists to include the Git LFS repository
+    apt-get update
+    # Install Git LFS using apt
+    apt-get install git-lfs -y
+  elif { [ "${CURRENT_DISTRO}" == "fedora" ] || [ "${CURRENT_DISTRO}" == "centos" ] || [ "${CURRENT_DISTRO}" == "rhel" ] || [ "${CURRENT_DISTRO}" == "almalinux" ] || [ "${CURRENT_DISTRO}" == "rocky" ]; }; then
+    # For Red Hat-based distributions, check for updates and install required packages
+    yum check-update
+  elif { [ "${CURRENT_DISTRO}" == "arch" ] || [ "${CURRENT_DISTRO}" == "archarm" ] || [ "${CURRENT_DISTRO}" == "manjaro" ]; }; then
+    # For Arch-based distributions, update the keyring and install required packages
+    pacman -Sy --noconfirm archlinux-keyring
+  elif [ "${CURRENT_DISTRO}" == "alpine" ]; then
+    # For Alpine Linux, update package lists and install required packages
+    apk update
+  elif [ "${CURRENT_DISTRO}" == "freebsd" ]; then
+    # For FreeBSD, update package lists and install required packages
+    pkg update
+  elif [ "${CURRENT_DISTRO}" == "ol" ]; then
+    # For Oracle Linux (OL), check for updates and install required packages
+    yum check-update
   fi
-  # Set the Git LFS GPG Key URL and the path to store the keyring
-  GIT_LFS_GPG_KEY="https://packagecloud.io/github/git-lfs/gpgkey"
-  # Set the path to store the Git LFS GPG Key
-  GIT_LFS_GPG_KEY_PATH="${APT_KEYRING_DIR}/git-lfs-archive-keyring.gpg"
-  # Download the Git LFS GPG Key and store it in the specified path
-  curl -fsSL ${GIT_LFS_GPG_KEY} | gpg --dearmor -o ${GIT_LFS_GPG_KEY_PATH}
-  # Add the Git LFS GPG Key to the APT keyring
-  gpg --no-default-keyring --keyring ${GIT_LFS_GPG_KEY_PATH} --import
-  
 }
 
 # Call the install-git-lfs function to install Git LFS on the system
