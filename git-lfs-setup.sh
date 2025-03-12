@@ -110,6 +110,8 @@ check_disk_space
 function install-git-lfs() {
   if { [ ! -x "$(command -v git)" ] || [ ! -x "$(command -v git-lfs)" ]; }; then
     if { [ "${CURRENT_DISTRO}" == "ubuntu" ] || [ "${CURRENT_DISTRO}" == "debian" ] || [ "${CURRENT_DISTRO}" == "raspbian" ] || [ "${CURRENT_DISTRO}" == "pop" ] || [ "${CURRENT_DISTRO}" == "kali" ] || [ "${CURRENT_DISTRO}" == "linuxmint" ] || [ "${CURRENT_DISTRO}" == "neon" ]; }; then
+      # Update the package lists and install the required packages for Debian-based distributions
+      apt-get update
       # Add the debian archive keyring, and install the apt-transport-https package
       apt-get install debian-archive-keyring apt-transport-https git -y
       # Set the path for the APT Keyring Directory
