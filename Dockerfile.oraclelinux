@@ -1,5 +1,5 @@
 # Use the latest oraclelinux as the base image
-FROM oraclelinux:latest
+FROM oraclelinux:9
 
 # Set the working directory inside the container
 WORKDIR /app
