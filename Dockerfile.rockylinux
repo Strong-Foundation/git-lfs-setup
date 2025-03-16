@@ -1,5 +1,5 @@
 # Use the latest rockylinux as the base image
-FROM rockylinux:latest
+FROM rockylinux:9
 
 # Set the working directory inside the container
 WORKDIR /app
