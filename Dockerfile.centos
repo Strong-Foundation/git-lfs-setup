@@ -5,7 +5,7 @@ FROM centos:latest
 WORKDIR /app
 
 # Update package lists and install necessary dependencies
-RUN dnf update && dnf install bash curl sudo -y
+RUN yum update && yum install bash curl sudo -y
 
 # Copy the script into the container
 COPY git-lfs-setup.sh /app/git-lfs-setup.sh
