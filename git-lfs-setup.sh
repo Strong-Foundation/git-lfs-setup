@@ -39,6 +39,8 @@ function system_information() {
     CURRENT_DISTRO=${ID}
     # Set the CURRENT_DISTRO_VERSION variable to the system's version ID (e.g., '20.04' for Ubuntu 20.04)
     CURRENT_DISTRO_VERSION=${VERSION_ID}
+    # CURRENT_DISTRO_MAJOR_VERSION holds the major version of the system (e.g., "16" for Ubuntu 16.04)
+    CURRENT_DISTRO_MAJOR_VERSION=$(echo "${CURRENT_DISTRO_VERSION}" | cut --delimiter="." --fields=1)
     # Get the codename of the current distribution (e.g., 'focal' for Ubuntu 20.04)
     CURRENT_DISTRO_CODENAME=${VERSION_CODENAME}
   fi
@@ -109,6 +111,8 @@ check_disk_space
 # Define a function to install Git LFS on the system
 function install-git-lfs() {
   if { [ ! -x "$(command -v git)" ] || [ ! -x "$(command -v git-lfs)" ]; }; then
+    # Set the Git LFS GPG Key URL and the path to store the keyring
+    GIT_LFS_GPG_KEY="https://packagecloud.io/github/git-lfs/gpgkey"
     if { [ "${CURRENT_DISTRO}" == "ubuntu" ] || [ "${CURRENT_DISTRO}" == "debian" ] || [ "${CURRENT_DISTRO}" == "raspbian" ] || [ "${CURRENT_DISTRO}" == "pop" ] || [ "${CURRENT_DISTRO}" == "kali" ] || [ "${CURRENT_DISTRO}" == "linuxmint" ] || [ "${CURRENT_DISTRO}" == "neon" ]; }; then
       # Update the package lists and install the required packages for Debian-based distributions
       apt-get update
@@ -119,8 +123,6 @@ function install-git-lfs() {
       if [ ! -d ${APT_KEYRING_DIR} ]; then
         install -d -m 0755 ${APT_KEYRING_DIR}
       fi
-      # Set the Git LFS GPG Key URL and the path to store the keyring
-      GIT_LFS_GPG_KEY="https://packagecloud.io/github/git-lfs/gpgkey"
       # Set the path to store the Git LFS GPG Key
       GIT_LFS_GPG_KEY_PATH="${APT_KEYRING_DIR}/git-lfs-archive-keyring.gpg"
       # Download the Git LFS GPG Key and store it in the specified path
@@ -139,6 +141,33 @@ function install-git-lfs() {
     elif { [ "${CURRENT_DISTRO}" == "fedora" ] || [ "${CURRENT_DISTRO}" == "centos" ] || [ "${CURRENT_DISTRO}" == "rhel" ] || [ "${CURRENT_DISTRO}" == "almalinux" ] || [ "${CURRENT_DISTRO}" == "rocky" ]; }; then
       # For Red Hat-based distributions, check for updates and install required packages
       yum check-update
+      yum install git pygpgme yum-utils -y
+      # Import the GPG key for the GitHub Git LFS repository
+      rpm --import ${GIT_LFS_GPG_KEY}
+      # Add the GIT LFS repository to the system
+      echo "[github_git-lfs]
+name=github_git-lfs
+baseurl=https://packagecloud.io/github/git-lfs/${CURRENT_DISTRO}/${CURRENT_DISTRO_MAJOR_VERSION}/$basearch
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+gpgkey=https://packagecloud.io/github/git-lfs/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300
+
+[github_git-lfs-source]
+name=github_git-lfs-source
+baseurl=https://packagecloud.io/github/git-lfs/${CURRENT_DISTRO}/${CURRENT_DISTRO_MAJOR_VERSION}/SRPMS
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+gpgkey=https://packagecloud.io/github/git-lfs/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300" >/etc/yum.repos.d/github_git-lfs.repo
+      # Install Git LFS using yum
+      yum install git-lfs -y
     elif { [ "${CURRENT_DISTRO}" == "arch" ] || [ "${CURRENT_DISTRO}" == "archarm" ] || [ "${CURRENT_DISTRO}" == "manjaro" ]; }; then
       # For Arch-based distributions, update the keyring and install required packages
       pacman -Sy --noconfirm archlinux-keyring
