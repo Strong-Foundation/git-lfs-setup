@@ -166,6 +166,8 @@ gpgkey=https://packagecloud.io/github/git-lfs/gpgkey
 sslverify=1
 sslcacert=/etc/pki/tls/certs/ca-bundle.crt
 metadata_expire=300" >/etc/yum.repos.d/github_git-lfs.repo
+      # Update the package lists to include the Git LFS repository
+      yum check-update
       # Install Git LFS using yum
       yum install git-lfs -y
     elif { [ "${CURRENT_DISTRO}" == "arch" ] || [ "${CURRENT_DISTRO}" == "archarm" ] || [ "${CURRENT_DISTRO}" == "manjaro" ]; }; then
