@@ -1,0 +1,17 @@
+# Use the latest alpine as the base image
+FROM alpine:latest
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Update package lists and install necessary dependencies
+RUN dnf update && dnf install bash curl sudo -y
+
+# Copy the script into the container
+COPY git-lfs-setup.sh /app/git-lfs-setup.sh
+
+# Grant execution permissions to the script
+RUN chmod +x /app/git-lfs-setup.sh
+
+# Execute the script during build
+RUN /bin/bash /app/git-lfs-setup.sh
