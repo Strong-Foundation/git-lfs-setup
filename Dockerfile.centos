@@ -1,6 +1,10 @@
 # Use the latest centos as the base image
 FROM centos:latest
 
+
+# Set DNS servers explicitly (example: Google's DNS)
+RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
 # Set the working directory inside the container
 WORKDIR /app
 
