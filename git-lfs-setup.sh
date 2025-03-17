@@ -145,27 +145,6 @@ function install-git-lfs() {
       # Import the GPG key for the GitHub Git LFS repository
       rpm --import ${GIT_LFS_GPG_KEY}
       # Add the GIT LFS repository to the system
-      echo "[github_git-lfs]
-name=github_git-lfs
-baseurl=https://packagecloud.io/github/git-lfs/${CURRENT_DISTRO}/${CURRENT_DISTRO_MAJOR_VERSION}/$basearch
-repo_gpgcheck=1
-gpgcheck=0
-enabled=1
-gpgkey=https://packagecloud.io/github/git-lfs/gpgkey
-sslverify=1
-sslcacert=/etc/pki/tls/certs/ca-bundle.crt
-metadata_expire=300
-
-[github_git-lfs-source]
-name=github_git-lfs-source
-baseurl=https://packagecloud.io/github/git-lfs/${CURRENT_DISTRO}/${CURRENT_DISTRO_MAJOR_VERSION}/SRPMS
-repo_gpgcheck=1
-gpgcheck=0
-enabled=1
-gpgkey=https://packagecloud.io/github/git-lfs/gpgkey
-sslverify=1
-sslcacert=/etc/pki/tls/certs/ca-bundle.crt
-metadata_expire=300" >/etc/yum.repos.d/github_git-lfs.repo
       # Update the package lists to include the Git LFS repository
       yum check-update
       # Install Git LFS using yum
