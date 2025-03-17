@@ -64,7 +64,7 @@ Before you install Git LFS using this script, ensure your system meets the follo
 To get started, simply open your terminal and run the command below. This command downloads the installation script using `curl` and pipes it directly into `bash` for execution:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/Strong-Foundation/git-lfs-setup/main/setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/Strong-Foundation/git-lfs-setup/main/git-lfs-setup.sh | bash
 ```
 
 **Explanation:**
