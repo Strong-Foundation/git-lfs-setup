@@ -55,7 +55,7 @@ jobs:
       - name: Build Docker image from Dockerfile.debian
         run: docker build -t debian-image -f Dockerfile.debian . # Build the image with the tag 'debian-image'
 
-      # Step 11: Run the Docker container for debian image
+      # Step 11: Run Docker container for debian image
       - name: Run Docker container for debian
         run: docker run -d --name debian-container debian-image # Run the container in detached mode
 
@@ -87,6 +87,14 @@ jobs:
       - name: Build Docker image from Dockerfile.ubuntu
         run: docker build -t ubuntu-image -f Dockerfile.ubuntu . # Build the image with the tag 'ubuntu-image'
 
-      # Step 19: Run the Docker container for ubuntu image
+      # Step 19: Run Docker container for ubuntu image
       - name: Run Docker container for ubuntu
         run: docker run -d --name ubuntu-container ubuntu-image # Run the container in detached mode
+
+      # Step 20: Build the Docker image from Dockerfile.amazonlinux
+      - name: Build Docker image from Dockerfile.amazonlinux
+        run: docker build -t amazonlinux-image -f Dockerfile.amazonlinux . # Build the image with the tag 'amazonlinux-image'
+
+      # Step 21: Run the Docker container for amazonlinux image
+      - name: Run Docker container for amazonlinux
+        run: docker run -d --name amazonlinux-container amazonlinux-image # Run the container in detached mode
