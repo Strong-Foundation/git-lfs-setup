@@ -66,6 +66,8 @@ function installing_system_requirements() {
         # For Red Hat-based distributions, check for updates and install required packages
         yum check-update
         # Install necessary packages for Red Hat-based distributions
+        yum install epel-release -y --allowerasing
+        yum check-update
         yum install curl coreutils gnupg -y --allowerasing
       elif { [ "${CURRENT_DISTRO}" == "arch" ] || [ "${CURRENT_DISTRO}" == "archarm" ] || [ "${CURRENT_DISTRO}" == "manjaro" ]; }; then
         # For Arch-based distributions, update the keyring and install required packages
@@ -81,6 +83,8 @@ function installing_system_requirements() {
         pkg install curl coreutils gnupg
       elif [ "${CURRENT_DISTRO}" == "ol" ]; then
         # For Oracle Linux (OL), check for updates and install required packages
+        yum check-update
+        yum install epel-release -y --allowerasing
         yum check-update
         yum install curl coreutils gnupg -y --allowerasing
       fi
@@ -144,12 +148,13 @@ function install-git-lfs() {
       # For Red Hat-based distributions, check for updates and install required packages
       yum check-update
       yum install git yum-utils -y --allowerasing
-      # Import the GPG key for the GitHub Git LFS repository
-      rpm --import ${GIT_LFS_GPG_KEY}
-      # Set the path GIT LFS YUM repository configuration file
-      GIT_LFS_YUM_REPO_FILE="/etc/yum.repos.d/github_git-lfs.repo"
-      # Add the GitHub Git LFS repository configuration to the system
-echo "[github_git-lfs]
+      if { [ "${CURRENT_DISTRO}" == "fedora" ] || [ "${CURRENT_DISTRO}" == "centos" ] || [ "${CURRENT_DISTRO}" == "rhel" ] || [ "${CURRENT_DISTRO}" == "rocky" ] || [ "${CURRENT_DISTRO}" == "amzn" ]; }; then
+        # Import the GPG key for the GitHub Git LFS repository
+        rpm --import ${GIT_LFS_GPG_KEY}
+        # Set the path GIT LFS YUM repository configuration file
+        GIT_LFS_YUM_REPO_FILE="/etc/yum.repos.d/github_git-lfs.repo"
+        # Add the GitHub Git LFS repository configuration to the system
+        echo "[github_git-lfs]
 name=github_git-lfs
 baseurl=https://packagecloud.io/github/git-lfs/${CURRENT_DISTRO}/${CURRENT_DISTRO_MAJOR_VERSION}/${CURRENT_SYSTEM_ARCHITECTURE}
 repo_gpgcheck=1
@@ -169,9 +174,10 @@ enabled=1
 gpgkey=https://packagecloud.io/github/git-lfs/gpgkey
 sslverify=1
 sslcacert=/etc/pki/tls/certs/ca-bundle.crt
-metadata_expire=300" > ${GIT_LFS_YUM_REPO_FILE}
-      # Update the package lists to include the Git LFS repository
-      yum check-update
+metadata_expire=300" >${GIT_LFS_YUM_REPO_FILE}
+        # Update the package lists to include the Git LFS repository
+        yum check-update
+      fi
       # Install Git LFS using yum
       yum install git-lfs -y --allowerasing
     elif { [ "${CURRENT_DISTRO}" == "arch" ] || [ "${CURRENT_DISTRO}" == "archarm" ] || [ "${CURRENT_DISTRO}" == "manjaro" ]; }; then
@@ -193,3 +199,20 @@ metadata_expire=300" > ${GIT_LFS_YUM_REPO_FILE}
 
 # Call the install-git-lfs function to install Git LFS on the system
 install-git-lfs
+
+# Check if the git and git lfs commands are available
+function check-git-and-git-lfs() {
+  if { [ -x "$(command -v git)" ] && [ -x "$(command -v git-lfs)" ]; }; then
+    # If both git and git-lfs are available, display a success message
+    echo "Git LFS has been successfully installed on your system."
+    # Display the installed versions of git and git-lfs
+    echo "Git version: $(git --version)"
+    echo "Git LFS version: $(git-lfs --version)"
+  else
+    # If either git or git-lfs is missing, display an error message
+    echo "Error: Git LFS installation failed. Please check the output above for any error messages."
+  fi
+}
+
+# Call the check-git-and-git-lfs function to verify the installation
+check-git-and-git-lfs
