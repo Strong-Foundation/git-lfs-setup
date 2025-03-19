@@ -66,7 +66,7 @@ function installing_system_requirements() {
         # For Red Hat-based distributions, check for updates and install required packages
         yum check-update
         # Install necessary packages for Red Hat-based distributions
-        yum install curl coreutils gnupg -y --nobest
+        yum install curl coreutils gnupg -y --allowerasing
       elif { [ "${CURRENT_DISTRO}" == "arch" ] || [ "${CURRENT_DISTRO}" == "archarm" ] || [ "${CURRENT_DISTRO}" == "manjaro" ]; }; then
         # For Arch-based distributions, update the keyring and install required packages
         pacman -Sy --noconfirm archlinux-keyring
@@ -82,7 +82,7 @@ function installing_system_requirements() {
       elif [ "${CURRENT_DISTRO}" == "ol" ]; then
         # For Oracle Linux (OL), check for updates and install required packages
         yum check-update
-        yum install curl coreutils gnupg -y --nobest
+        yum install curl coreutils gnupg -y --allowerasing
       fi
     fi
   else
@@ -143,7 +143,7 @@ function install-git-lfs() {
     elif { [ "${CURRENT_DISTRO}" == "fedora" ] || [ "${CURRENT_DISTRO}" == "centos" ] || [ "${CURRENT_DISTRO}" == "rhel" ] || [ "${CURRENT_DISTRO}" == "almalinux" ] || [ "${CURRENT_DISTRO}" == "rocky" ] || [ "${CURRENT_DISTRO}" == "amzn" ]; }; then
       # For Red Hat-based distributions, check for updates and install required packages
       yum check-update
-      yum install git yum-utils -y --nobest
+      yum install git yum-utils -y --allowerasing
       # Import the GPG key for the GitHub Git LFS repository
       rpm --import ${GIT_LFS_GPG_KEY}
       # Set the path GIT LFS YUM repository configuration file
@@ -173,7 +173,7 @@ metadata_expire=300" > ${GIT_LFS_YUM_REPO_FILE}
       # Update the package lists to include the Git LFS repository
       yum check-update
       # Install Git LFS using yum
-      yum install git-lfs -y --nobest
+      yum install git-lfs -y --allowerasing
     elif { [ "${CURRENT_DISTRO}" == "arch" ] || [ "${CURRENT_DISTRO}" == "archarm" ] || [ "${CURRENT_DISTRO}" == "manjaro" ]; }; then
       # For Arch-based distributions, update the keyring and install required packages
       pacman -Sy --noconfirm archlinux-keyring
@@ -186,7 +186,7 @@ metadata_expire=300" > ${GIT_LFS_YUM_REPO_FILE}
     elif [ "${CURRENT_DISTRO}" == "ol" ]; then
       # For Oracle Linux (OL), check for updates and install required packages
       yum check-update
-      yum install git yum-utils -y --nobest
+      yum install git yum-utils -y --allowerasing
     fi
   fi
 }
