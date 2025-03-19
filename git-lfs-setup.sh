@@ -204,7 +204,7 @@ install-git-lfs
 function check-git-and-git-lfs() {
   if { [ -x "$(command -v git)" ] && [ -x "$(command -v git-lfs)" ]; }; then
     # If both git and git-lfs are available, display a success message
-    echo "Git LFS has been successfully installed on your system."
+    echp "Git and Git LFS have been successfully installed."
     # Display the installed versions of git and git-lfs
     echo "Git version: $(git --version)"
     echo "Git LFS version: $(git-lfs --version)"
