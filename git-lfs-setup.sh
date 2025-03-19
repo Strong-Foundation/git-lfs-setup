@@ -144,7 +144,7 @@ function install-git-lfs() {
       apt-get update
       # Install Git LFS using apt
       apt-get install git-lfs -y
-    elif { [ "${CURRENT_DISTRO}" == "fedora" ] || [ "${CURRENT_DISTRO}" == "centos" ] || [ "${CURRENT_DISTRO}" == "rhel" ] || [ "${CURRENT_DISTRO}" == "almalinux" ] || [ "${CURRENT_DISTRO}" == "rocky" ] || [ "${CURRENT_DISTRO}" == "amzn" ]; }; then
+    elif { [ "${CURRENT_DISTRO}" == "fedora" ] || [ "${CURRENT_DISTRO}" == "centos" ] || [ "${CURRENT_DISTRO}" == "rhel" ] || [ "${CURRENT_DISTRO}" == "almalinux" ] || [ "${CURRENT_DISTRO}" == "rocky" ] || [ "${CURRENT_DISTRO}" == "amzn" ] || [ "${CURRENT_DISTRO}" == "ol" ]; }; then
       # For Red Hat-based distributions, check for updates and install required packages
       yum check-update
       yum install git yum-utils -y --allowerasing
@@ -193,10 +193,6 @@ metadata_expire=300" >${GIT_LFS_YUM_REPO_FILE}
     elif [ "${CURRENT_DISTRO}" == "freebsd" ]; then
       # For FreeBSD, update package lists and install required packages
       pkg update
-    elif [ "${CURRENT_DISTRO}" == "ol" ]; then
-      # For Oracle Linux (OL), check for updates and install required packages
-      yum check-update
-      yum install git yum-utils -y --allowerasing
     fi
   fi
 }
