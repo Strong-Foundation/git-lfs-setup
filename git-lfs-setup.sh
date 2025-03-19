@@ -186,6 +186,8 @@ metadata_expire=300" >${GIT_LFS_YUM_REPO_FILE}
     elif [ "${CURRENT_DISTRO}" == "alpine" ]; then
       # For Alpine Linux, update package lists and install required packages
       apk update
+      # Install the git package using apk
+      apk add git git-lfs
     elif [ "${CURRENT_DISTRO}" == "freebsd" ]; then
       # For FreeBSD, update package lists and install required packages
       pkg update
