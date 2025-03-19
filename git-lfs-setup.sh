@@ -40,7 +40,7 @@ function system_information() {
     # Set the CURRENT_DISTRO_VERSION variable to the system's version ID (e.g., '20.04' for Ubuntu 20.04)
     CURRENT_DISTRO_VERSION=${VERSION_ID}
     # CURRENT_DISTRO_MAJOR_VERSION holds the major version of the system (e.g., "16" for Ubuntu 16.04)
-    CURRENT_DISTRO_MAJOR_VERSION=$(echo "${CURRENT_DISTRO_VERSION}" | cut --delimiter="." --fields=1)
+    CURRENT_DISTRO_MAJOR_VERSION=$(echo "${CURRENT_DISTRO_VERSION}" | cut -d. -f1)
     # Get the codename of the current distribution (e.g., 'focal' for Ubuntu 20.04)
     CURRENT_DISTRO_CODENAME=${VERSION_CODENAME}
     # Get the current system architecture (e.g., 'x86_64', 'armv7l')
@@ -102,7 +102,7 @@ installing_system_requirements
 # The following function checks if there's enough disk space to proceed with the installation.
 function check_disk_space() {
   # This function checks if there is more than 1 GB of free space on the drive.
-  FREE_SPACE_ON_DRIVE_IN_MB=$(df -m / | tr --squeeze-repeats " " | tail -n1 | cut --delimiter=" " --fields=4)
+  FREE_SPACE_ON_DRIVE_IN_MB=$(df -m / | tr --squeeze-repeats " " | tail -n1 | cut -d' ' -f4)
   # This line calculates the available free space on the root partition in MB.
   if [ "${FREE_SPACE_ON_DRIVE_IN_MB}" -le 1024 ]; then
     # If the available free space is less than or equal to 1024 MB (1 GB), display an error message and exit.
