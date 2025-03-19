@@ -202,15 +202,27 @@ install-git-lfs
 
 # Check if the git and git lfs commands are available
 function check-git-and-git-lfs() {
-  if { [ -x "$(command -v git)" ] && [ -x "$(command -v git-lfs)" ]; }; then
-    # If both git and git-lfs are available, display a success message
-    echp "Git and Git LFS have been successfully installed."
-    # Display the installed versions of git and git-lfs
+  # Check if the command git is available and executable
+  if [ -x "$(command -v git)" ]; then
+    # If git is available, display the installed version
+    echo "Git has been successfully installed."
+    # If git is available, display the installed version
     echo "Git version: $(git --version)"
+  else
+    # If git is not available, display an error message
+    echo "Error: Git is not installed or not available on the system."
+    exit 1
+  fi
+  # Check if the command git-lfs is available and executable
+  if [ -x "$(command -v git-lfs)" ]; then
+    # If git-lfs is available, display the installed version
+    echo "Git LFS has been successfully installed."
+    # If git-lfs is available, display the installed version
     echo "Git LFS version: $(git-lfs --version)"
   else
-    # If either git or git-lfs is missing, display an error message
-    echo "Error: Git LFS installation failed. Please check the output above for any error messages."
+    # If git-lfs is not available, display an error message
+    echo "Error: Git LFS is not installed or not available on the system."
+    exit 1
   fi
 }
 
