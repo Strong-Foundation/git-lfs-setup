@@ -43,6 +43,8 @@ function system_information() {
     CURRENT_DISTRO_MAJOR_VERSION=$(echo "${CURRENT_DISTRO_VERSION}" | cut --delimiter="." --fields=1)
     # Get the codename of the current distribution (e.g., 'focal' for Ubuntu 20.04)
     CURRENT_DISTRO_CODENAME=${VERSION_CODENAME}
+    # Get the current system architecture (e.g., 'x86_64', 'armv7l')
+    CURRENT_SYSTEM_ARCHITECTURE=$(uname -m)
   fi
 }
 
@@ -141,10 +143,33 @@ function install-git-lfs() {
     elif { [ "${CURRENT_DISTRO}" == "fedora" ] || [ "${CURRENT_DISTRO}" == "centos" ] || [ "${CURRENT_DISTRO}" == "rhel" ] || [ "${CURRENT_DISTRO}" == "almalinux" ] || [ "${CURRENT_DISTRO}" == "rocky" ] || [ "${CURRENT_DISTRO}" == "amzn" ]; }; then
       # For Red Hat-based distributions, check for updates and install required packages
       yum check-update
-      yum install git pygpgme yum-utils -y
+      yum install git yum-utils -y
       # Import the GPG key for the GitHub Git LFS repository
       rpm --import ${GIT_LFS_GPG_KEY}
-      # Add the GIT LFS repository to the system
+      # Set the path GIT LFS YUM repository configuration file
+      GIT_LFS_YUM_REPO_FILE="/etc/yum.repos.d/github_git-lfs.repo"
+      # Add the GitHub Git LFS repository configuration to the system
+echo "[github_git-lfs]
+name=github_git-lfs
+baseurl=https://packagecloud.io/github/git-lfs/${CURRENT_DISTRO}/${CURRENT_DISTRO_MAJOR_VERSION}/${CURRENT_SYSTEM_ARCHITECTURE}
+repo_gpgcheck=1
+gpgcheck=1
+enabled=1
+gpgkey=https://packagecloud.io/github/git-lfs/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300
+
+[github_git-lfs-source]
+name=github_git-lfs-source
+baseurl=https://packagecloud.io/github/git-lfs/${CURRENT_DISTRO}/${CURRENT_DISTRO_MAJOR_VERSION}/SRPMS
+repo_gpgcheck=1
+gpgcheck=1
+enabled=1
+gpgkey=https://packagecloud.io/github/git-lfs/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300" > ${GIT_LFS_YUM_REPO_FILE}
       # Update the package lists to include the Git LFS repository
       yum check-update
       # Install Git LFS using yum
