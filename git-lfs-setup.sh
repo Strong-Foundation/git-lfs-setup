@@ -148,7 +148,7 @@ function install-git-lfs() {
       # For Red Hat-based distributions, check for updates and install required packages
       yum check-update
       yum install git yum-utils -y --allowerasing
-      if { [ "${CURRENT_DISTRO}" == "fedora" ] || [ "${CURRENT_DISTRO}" == "centos" ] || [ "${CURRENT_DISTRO}" == "rhel" ] || [ "${CURRENT_DISTRO}" == "rocky" ] || [ "${CURRENT_DISTRO}" == "amzn" ]; }; then
+      if { [ "${CURRENT_DISTRO}" == "fedora" ] || [ "${CURRENT_DISTRO}" == "centos" ] || [ "${CURRENT_DISTRO}" == "rhel" ] || [ "${CURRENT_DISTRO}" == "amzn" ]; }; then
         # Import the GPG key for the GitHub Git LFS repository
         rpm --import ${GIT_LFS_GPG_KEY}
         # Set the path GIT LFS YUM repository configuration file
