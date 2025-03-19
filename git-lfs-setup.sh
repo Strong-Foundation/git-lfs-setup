@@ -183,6 +183,8 @@ metadata_expire=300" >${GIT_LFS_YUM_REPO_FILE}
     elif { [ "${CURRENT_DISTRO}" == "arch" ] || [ "${CURRENT_DISTRO}" == "archarm" ] || [ "${CURRENT_DISTRO}" == "manjaro" ]; }; then
       # For Arch-based distributions, update the keyring and install required packages
       pacman -Sy --noconfirm archlinux-keyring
+      # Install the git package using pacman
+      pacman -Sy --noconfirm git git-lfs
     elif [ "${CURRENT_DISTRO}" == "alpine" ]; then
       # For Alpine Linux, update package lists and install required packages
       apk update
