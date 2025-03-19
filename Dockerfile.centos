@@ -1,7 +1,6 @@
 # Use the latest centos as the base image
 FROM centos:latest
 
-
 # Set the working directory inside the container
 WORKDIR /app
 
