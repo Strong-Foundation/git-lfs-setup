@@ -101,7 +101,7 @@ jobs:
 
       # Step 22: Build the Docker image from Dockerfile.mageia
       - name: Build Docker image from Dockerfile.mageia
-        run: docker build -t mageia-image -f assets/Dockerfile/Dockerfile.mageia . # Build the image with the tag 'mageia-image'
+        run: docker build -t mageia-image -f Dockerfile.mageia . # Build the image with the tag 'mageia-image'
 
       # Step 23: Run Docker container for mageia image
       - name: Run Docker container for mageia
@@ -109,7 +109,7 @@ jobs:
 
       # Step 24: Build the Docker image from Dockerfile.opensuse
       - name: Build Docker image from Dockerfile.opensuse
-        run: docker build -t opensuse-image -f assets/Dockerfile/Dockerfile.opensuse . # Build the image with the tag 'opensuse-image'
+        run: docker build -t opensuse-image -f Dockerfile.opensuse . # Build the image with the tag 'opensuse-image'
 
       # Step 25: Run Docker container for opensuse image
       - name: Run Docker container for opensuse
