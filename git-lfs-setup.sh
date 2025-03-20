@@ -28,6 +28,45 @@ function check_root() {
 # Call the check_root function to verify that the script is executed with root privileges
 check_root
 
+# Check if the script is being run on a Mac system
+function mac_installtion() {
+  if [ "$(uname)" == "Darwin" ]; then
+    # Check if Homebrew is installed
+    if [ ! -x "$(command -v brew)" ]; then
+      # If Homebrew is not installed,
+      echo "Homebrew is not installed, Please install Homebrew to proceed."
+      exit 1
+    fi
+    # Check if git is installed
+    if [ ! -x "$(command -v git)" ]; then
+      # If git is not installed, install it using Homebrew
+      echo "Git is not installed. Installing Git using Homebrew..."
+      brew install git
+    fi
+    # Check if git-lfs is installed
+    if [ ! -x "$(command -v git-lfs)" ]; then
+      # If git-lfs is not installed, install it using Homebrew
+      echo "Git LFS is not installed. Installing Git LFS using Homebrew..."
+      brew install git-lfs
+    fi
+    # Check if the both git and git-lfs are installed
+    if { [ -x "$(command -v git)" ] && [ -x "$(command -v git-lfs)" ]; }; then
+      # If both git and git-lfs are installed, display the installed versions
+      echo "Git and Git LFS have been successfully installed."
+      echo "Git version: $(git --version)"
+      echo "Git LFS version: $(git-lfs --version)"
+      exit 0
+    else
+      # If git or git-lfs is not installed, display an error message
+      echo "Error: Git or Git LFS is not installed or not available on the system."
+      exit 1
+    fi
+  fi
+}
+
+# Call the mac_installtion function to check and install Git and Git LFS on macOS systems
+mac_installtion
+
 # Define a function to gather and store system-related information
 function system_information() {
   # Check if the /etc/os-release file exists, which contains information about the OS
