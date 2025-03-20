@@ -154,7 +154,7 @@ function check_disk_space() {
 check_disk_space
 
 # Define a function to install Git LFS on the system
-function install-git-lfs() {
+function install_git_lfs() {
   if { [ ! -x "$(command -v git)" ] || [ ! -x "$(command -v git-lfs)" ]; }; then
     # Set the Git LFS GPG Key URL and the path to store the keyring
     GIT_LFS_GPG_KEY="https://packagecloud.io/github/git-lfs/gpgkey"
@@ -236,11 +236,11 @@ metadata_expire=300" >${GIT_LFS_YUM_REPO_FILE}
   fi
 }
 
-# Call the install-git-lfs function to install Git LFS on the system
-install-git-lfs
+# Call the install_git_lfs function to install Git LFS on the system
+install_git_lfs
 
 # Check if the git and git lfs commands are available
-function check-git-and-git-lfs() {
+function check_git_and_git_lfs() {
   # Check if the command git is available and executable
   if [ -x "$(command -v git)" ]; then
     # If git is available, display the installed version
@@ -265,5 +265,5 @@ function check-git-and-git-lfs() {
   fi
 }
 
-# Call the check-git-and-git-lfs function to verify the installation
-check-git-and-git-lfs
+# Call the check_git_and_git_lfs function to verify the installation
+check_git_and_git_lfs
