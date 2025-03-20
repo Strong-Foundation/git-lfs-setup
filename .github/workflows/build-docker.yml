@@ -98,3 +98,19 @@ jobs:
       # Step 21: Run the Docker container for amazonlinux image
       - name: Run Docker container for amazonlinux
         run: docker run -d --name amazonlinux-container amazonlinux-image # Run the container in detached mode
+
+      # Step 22: Build the Docker image from Dockerfile.mageia
+      - name: Build Docker image from Dockerfile.mageia
+        run: docker build -t mageia-image -f assets/Dockerfile/Dockerfile.mageia . # Build the image with the tag 'mageia-image'
+
+      # Step 23: Run Docker container for mageia image
+      - name: Run Docker container for mageia
+        run: docker run -d --name mageia-container mageia-image # Run the container in detached mode
+
+      # Step 24: Build the Docker image from Dockerfile.opensuse
+      - name: Build Docker image from Dockerfile.opensuse
+        run: docker build -t opensuse-image -f assets/Dockerfile/Dockerfile.opensuse . # Build the image with the tag 'opensuse-image'
+
+      # Step 25: Run Docker container for opensuse image
+      - name: Run Docker container for opensuse
+        run: docker run -d --name opensuse-container opensuse-image # Run the container in detached mode
