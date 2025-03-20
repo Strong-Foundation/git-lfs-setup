@@ -93,7 +93,7 @@ system_information
 # Define a function to check system requirements and install missing packages
 function installing_system_requirements() {
   # Check if the current Linux distribution is one of the supported distributions
-  if { [ "${CURRENT_DISTRO}" == "ubuntu" ] || [ "${CURRENT_DISTRO}" == "debian" ] || [ "${CURRENT_DISTRO}" == "raspbian" ] || [ "${CURRENT_DISTRO}" == "pop" ] || [ "${CURRENT_DISTRO}" == "kali" ] || [ "${CURRENT_DISTRO}" == "linuxmint" ] || [ "${CURRENT_DISTRO}" == "neon" ] || [ "${CURRENT_DISTRO}" == "fedora" ] || [ "${CURRENT_DISTRO}" == "centos" ] || [ "${CURRENT_DISTRO}" == "rhel" ] || [ "${CURRENT_DISTRO}" == "almalinux" ] || [ "${CURRENT_DISTRO}" == "rocky" ] || [ "${CURRENT_DISTRO}" == "amzn" ] || [ "${CURRENT_DISTRO}" == "arch" ] || [ "${CURRENT_DISTRO}" == "archarm" ] || [ "${CURRENT_DISTRO}" == "manjaro" ] || [ "${CURRENT_DISTRO}" == "alpine" ] || [ "${CURRENT_DISTRO}" == "freebsd" ] || [ "${CURRENT_DISTRO}" == "ol" ]; }; then
+  if { [ "${CURRENT_DISTRO}" == "ubuntu" ] || [ "${CURRENT_DISTRO}" == "debian" ] || [ "${CURRENT_DISTRO}" == "raspbian" ] || [ "${CURRENT_DISTRO}" == "pop" ] || [ "${CURRENT_DISTRO}" == "kali" ] || [ "${CURRENT_DISTRO}" == "linuxmint" ] || [ "${CURRENT_DISTRO}" == "neon" ] || [ "${CURRENT_DISTRO}" == "fedora" ] || [ "${CURRENT_DISTRO}" == "centos" ] || [ "${CURRENT_DISTRO}" == "rhel" ] || [ "${CURRENT_DISTRO}" == "almalinux" ] || [ "${CURRENT_DISTRO}" == "rocky" ] || [ "${CURRENT_DISTRO}" == "amzn" ] || [ "${CURRENT_DISTRO}" == "arch" ] || [ "${CURRENT_DISTRO}" == "archarm" ] || [ "${CURRENT_DISTRO}" == "manjaro" ] || [ "${CURRENT_DISTRO}" == "alpine" ] || [ "${CURRENT_DISTRO}" == "freebsd" ] || [ "${CURRENT_DISTRO}" == "ol" ] || [ "${CURRENT_DISTRO}" == "mageia" ] || [ "${CURRENT_DISTRO}" == "opensuse-tumbleweed" ]; }; then
     # If the distribution is supported, check if the required packages are already installed
     if { [ ! -x "$(command -v curl)" ] || [ ! -x "$(command -v cut)" ] || [ ! -x "$(command -v gpg)" ]; }; then
       # If any of the required packages are missing, begin the installation process for the respective distribution
@@ -126,6 +126,12 @@ function installing_system_requirements() {
         yum install epel-release -y --allowerasing
         yum check-update
         yum install curl coreutils gnupg -y --allowerasing
+      elif [ "${CURRENT_DISTRO}" == "mageia" ]; then
+        urpmi.update -a
+        yes | urpmi curl coreutils gnupg
+      elif [ "${CURRENT_DISTRO}" == "opensuse-tumbleweed" ]; then
+        zypper refresh
+        zypper install -y curl coreutils gpg
       fi
     fi
   else
@@ -232,6 +238,12 @@ metadata_expire=300" >${GIT_LFS_YUM_REPO_FILE}
     elif [ "${CURRENT_DISTRO}" == "freebsd" ]; then
       # For FreeBSD, update package lists and install required packages
       pkg update
+    elif [ "${CURRENT_DISTRO}" == "mageia" ]; then
+      urpmi.update -a
+      yes | urpmi git git-lfs
+    elif [ "${CURRENT_DISTRO}" == "opensuse-tumbleweed" ]; then
+      zypper refresh
+      zypper install -y git git-lfs
     fi
   fi
 }
